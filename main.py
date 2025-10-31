@@ -38,13 +38,13 @@ COLORES_NOTAS = [
 
 # Se declaran los sonidos utilizados
 sonidos = [
-    cargar_sonido("sounds/note-do.mp3", 1),
-    cargar_sonido("sounds/note-re.mp3", 1),
-    cargar_sonido("sounds/note-mi.mp3", 1),
-    cargar_sonido("sounds/note-fa.mp3", 1),
-    cargar_sonido("sounds/note-sol.mp3", 1),
-    cargar_sonido("sounds/note-la.mp3", 1),
-    cargar_sonido("sounds/note-si.mp3", 1)
+    cargar_sonido("sounds/beep.wav", 1),
+    cargar_sonido("sounds/gota.wav", 1),
+    cargar_sonido("sounds/mouse.wav", 1),
+    cargar_sonido("sounds/organ.wav", 1),
+    cargar_sonido("sounds/plato.wav", 1),
+    cargar_sonido("sounds/organo.wav", 1),
+    cargar_sonido("sounds/drum.wav", 1)
 ]
 
 # CONFIGURACIÓN DEL GRID
