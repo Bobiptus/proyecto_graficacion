@@ -1,11 +1,13 @@
 import pygame
+import math
+import pygame.time
 
 def inicializar_grid(filas, columnas):
     grid = []
     for y in range(filas):
         fila = []
         for x in range(columnas):
-            fila.append(False)
+            fila.append(None)
         grid.append(fila)
     return grid
 
@@ -34,10 +36,20 @@ def dibujar_grid(screen, config, colores_notas):
                         1)
     for fila in range(filas):
         for col in range(columnas):
-            if grid[fila][col]:
+            if grid[fila][col] is not None:
+                nota = grid[fila][col]
                 centro_x = inicio_x + col * ancho_celda + ancho_celda // 2
                 centro_y = inicio_y + fila * alto_celda + alto_celda // 2
-                pygame.draw.circle(screen, colores_notas[fila], (centro_x, centro_y), 15)
+
+                bounce_time = nota.get('bounce', 5000)
+                current_time = pygame.time.get_ticks()   #Calcula el rebote
+                elapsed = (current_time - bounce_time) / 1000.0
+
+                if elapsed < 0.3:
+                    bounce_offset = math.sin(elapsed * 20) * math.exp(-elapsed * 8) * 8
+                    centro_y -= bounce_offset
+
+                pygame.draw.circle(screen, colores_notas[fila], (int(centro_x), int(centro_y)), 15)
 
 def mouse_a_grid(mouse_x, mouse_y, config):
     inicio_x = config['inicio_x']
@@ -57,4 +69,10 @@ def mouse_a_grid(mouse_x, mouse_y, config):
     return (fila, columna)
 
 def toggle_nota(grid, fila, columna):
-    grid[fila][columna] = not grid[fila][columna]
+    if grid[fila][columna] is None:
+        grid[fila][columna] = {
+            'fila': fila,
+            'bounce': 0
+        }
+    else:
+        grid[fila][columna] = None    

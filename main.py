@@ -11,6 +11,7 @@ import pygame
 from grid import inicializar_grid, dibujar_grid, mouse_a_grid, toggle_nota
 from orquesta import cargar_sonido, reproducir_sonido, reproducir_sonido_en_canal
 from botones import crear_boton, dibujar_boton, mouse_sobre_boton
+from personaje import dibujar_prota
 
 pygame.init()
 pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=512)
@@ -137,8 +138,10 @@ while running:
             if columna_actual >= GRID_COLUMNAS:
                 columna_actual = 0
             for fila in range(GRID_FILAS):
+                note = grid[fila][columna_actual]
                 if grid[fila][columna_actual]:
                     reproducir_sonido_en_canal(sonidos[fila], fila)
+                    note['bounce'] = pygame.time.get_ticks()
             
     
     # DIBUJAR
@@ -147,11 +150,7 @@ while running:
     
     # DIBUJAR PLAYHEAD
     if reproduciendo or columna_actual > 0:
-        x_playhead = GRID_INICIO_X + columna_actual * CELDA_ANCHO
-        pygame.draw.line(screen, RED,
-                        (x_playhead, GRID_INICIO_Y),
-                        (x_playhead, GRID_INICIO_Y + GRID_FILAS * CELDA_ALTO),
-                        3)
+        dibujar_prota(screen, columna_actual, config_grid, grid, RED)
     
     # DIBUJAR BOTONES
     mouse_x, mouse_y = pygame.mouse.get_pos()
