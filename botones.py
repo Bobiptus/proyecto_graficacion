@@ -1,6 +1,6 @@
 import pygame
 
-def crear_boton(x, y, ancho, alto, texto, color, color_hover, accion):
+def crear_boton(x, y, ancho, alto, texto, color, color_hover, accion, ruta_imagen):
     return {
     'x' : x,
     'y' : y,
@@ -9,7 +9,8 @@ def crear_boton(x, y, ancho, alto, texto, color, color_hover, accion):
     'texto' : texto,
     'color' : color,
     'color_hover' : color_hover,
-    'accion' : accion
+    'accion' : accion,
+    'ruta' : ruta_imagen
 }
 
 def mouse_sobre_boton(mouse_x, mouse_y, boton):
