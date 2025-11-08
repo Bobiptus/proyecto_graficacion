@@ -11,7 +11,7 @@ import pygame
 from grid import inicializar_grid, dibujar_grid, mouse_a_grid, toggle_nota
 from orquesta import cargar_sonido, reproducir_sonido, reproducir_sonido_en_canal
 from botones import crear_boton, dibujar_boton, mouse_sobre_boton
-from personaje import dibujar_prota
+from personaje import dibujar_prota, cargar_sprite_prota
 
 pygame.init()
 pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=512)
@@ -47,6 +47,7 @@ sonidos = [
     cargar_sonido("sounds/organo.wav", 1),
     cargar_sonido("sounds/drum.wav", 1)
 ]
+sprite_prota = cargar_sprite_prota("imagenes/MAESTRO.png")
 
 # CONFIGURACIÓN DEL GRID
 GRID_FILAS = 7
@@ -76,9 +77,9 @@ tiempo_acumulado = 0
 
 # CREAR BOTONES
 botones = [
-    crear_boton(100, 50, 100, 40, "Play", (0, 150, 0), (0, 200, 0), "play"),
-    crear_boton(220, 50, 100, 40, "Stop", (150, 0, 0), (200, 0, 0), "stop"),
-    crear_boton(340, 50, 100, 40, "Clear", (0, 0, 150), (0, 0, 200), "clear")
+    crear_boton(100, 50, 100, 40, "Play", (0, 150, 0), (0, 200, 0), "play", "/imagenes/PLAY.png"),
+    crear_boton(220, 50, 100, 40, "Stop", (150, 0, 0), (200, 0, 0), "stop", "/imagenes/STOP.png"),
+    crear_boton(340, 50, 100, 40, "Clear", (0, 0, 150), (0, 0, 200), "clear", "/imagenes/ERASER.png")
 ]
 
 # COMIENZA EL BUCLE PRINCIPAL
@@ -138,10 +139,10 @@ while running:
             if columna_actual >= GRID_COLUMNAS:
                 columna_actual = 0
             for fila in range(GRID_FILAS):
-                note = grid[fila][columna_actual]
-                if grid[fila][columna_actual]:
+                nota = grid[fila][columna_actual]
+                if nota is not None:
                     reproducir_sonido_en_canal(sonidos[fila], fila)
-                    note['bounce'] = pygame.time.get_ticks()
+                    nota['bounce'] = pygame.time.get_ticks()
             
     
     # DIBUJAR
@@ -150,7 +151,7 @@ while running:
     
     # DIBUJAR PLAYHEAD
     if reproduciendo or columna_actual > 0:
-        dibujar_prota(screen, columna_actual, config_grid, grid, RED)
+        dibujar_prota(screen, columna_actual, config_grid, grid, sprite_prota)
     
     # DIBUJAR BOTONES
     mouse_x, mouse_y = pygame.mouse.get_pos()
