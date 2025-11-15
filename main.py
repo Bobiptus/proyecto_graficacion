@@ -12,6 +12,7 @@ from grid import inicializar_grid, dibujar_grid, mouse_a_grid, toggle_nota
 from orquesta import cargar_sonido, reproducir_sonido, reproducir_sonido_en_canal
 from botones import crear_boton, dibujar_boton, mouse_sobre_boton
 from personaje import dibujar_prota, cargar_sprite_prota
+from database import crear_tablas
 
 pygame.init()
 pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=512)
@@ -77,10 +78,14 @@ tiempo_acumulado = 0
 
 # CREAR BOTONES
 botones = [
-    crear_boton(100, 50, 100, 40, "Play", (0, 150, 0), (0, 200, 0), "play", "/imagenes/PLAY.png"),
-    crear_boton(220, 50, 100, 40, "Stop", (150, 0, 0), (200, 0, 0), "stop", "/imagenes/STOP.png"),
-    crear_boton(340, 50, 100, 40, "Clear", (0, 0, 150), (0, 0, 200), "clear", "/imagenes/ERASER.png")
+    crear_boton(100, 50, 50, 50, "Play", (0, 150, 0), (0, 200, 0), "play", "imagenes/PLAY.png"),
+    crear_boton(220, 50, 50, 50, "Stop", (150, 0, 0), (200, 0, 0), "stop", "imagenes/STOP.png"),
+    crear_boton(340, 50, 50, 50, "Clear", (0, 0, 150), (0, 0, 200), "clear", "imagenes/ERASER.png"),
+    crear_boton(460, 50, 50, 50, "Guardar", (150, 150, 0), (200, 200, 0), "guardar", "imagenes/SAVE.png")
 ]
+
+# CREAR TABLAS EN LA BASE DE DATOS
+crear_tablas()
 
 # COMIENZA EL BUCLE PRINCIPAL
 running = True
