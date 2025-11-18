@@ -12,7 +12,7 @@ from grid import inicializar_grid, dibujar_grid, mouse_a_grid, toggle_nota
 from orquesta import cargar_sonido, reproducir_sonido, reproducir_sonido_en_canal
 from botones import crear_boton, dibujar_boton, mouse_sobre_boton
 from personaje import dibujar_prota, cargar_sprite_prota
-from database import crear_tablas
+from database import crear_tablas, cargar_cancion
 
 pygame.init()
 pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=512)
@@ -81,7 +81,8 @@ botones = [
     crear_boton(100, 50, 50, 50, "Play", (0, 150, 0), (0, 200, 0), "play", "imagenes/PLAY.png"),
     crear_boton(220, 50, 50, 50, "Stop", (150, 0, 0), (200, 0, 0), "stop", "imagenes/STOP.png"),
     crear_boton(340, 50, 50, 50, "Clear", (0, 0, 150), (0, 0, 200), "clear", "imagenes/ERASER.png"),
-    crear_boton(460, 50, 50, 50, "Guardar", (150, 150, 0), (200, 200, 0), "guardar", "imagenes/SAVE.png")
+    crear_boton(460, 50, 50, 50, "Guardar", (150, 150, 0), (200, 200, 0), "guardar", "imagenes/SAVE.png"),
+    crear_boton(580, 50, 50, 50, "Cargar", (0, 150, 150), (0, 200, 200), "cargar", "imagenes/LOAD.png")
 ]
 
 # CREAR TABLAS EN LA BASE DE DATOS
@@ -118,6 +119,18 @@ while running:
                     elif boton['accion'] == "clear":
                         grid = inicializar_grid(GRID_FILAS, GRID_COLUMNAS)
                         config_grid['grid'] = grid
+
+                    elif boton['accion'] == "guardar":
+                        from database import guardar_cancion
+                        guardar_cancion(grid)
+                    
+                    elif boton['accion'] == "cargar":
+                        # Aquí se debería implementar una forma de seleccionar qué canción cargar
+                        # Por simplicidad, cargaremos la canción con ID 1
+                        grid_cargado = cargar_cancion(1)
+                        if grid_cargado is not None:
+                            grid = grid_cargado
+                            config_grid['grid'] = grid
                     
                     break
             

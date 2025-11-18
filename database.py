@@ -1,4 +1,5 @@
 import sqlite3
+import pygame
 import time
 from datetime import datetime
 
@@ -12,7 +13,8 @@ def crear_tablas():
         # Crear tabla de canciones
         sql_crear_tabla_canciones = """
             CREATE TABLE IF NOT EXISTS canciones (
-                id INTEGER PRIMARY KEY AUTOINCREMENT
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nombre TEXT NOT NULL
         );
             """
         cursor.execute(sql_crear_tabla_canciones)
@@ -68,3 +70,35 @@ def guardar_cancion(grid):
     finally:
         if conexion:
             conexion.close()
+
+def cargar_cancion(cancion_id):
+    """Carga una canción desde la base de datos."""
+    conexion = None
+    grid = None
+    try:
+        conexion = sqlite3.connect('mi_base_de_datos.db')
+        cursor = conexion.cursor()
+
+        # Obtener notas de la canción
+        cursor.execute("SELECT fila, columna FROM notas WHERE cancion_id = ?", (cancion_id,))
+        notas = cursor.fetchall()
+
+        # Inicializar grid vacío
+        FILAS = 7
+        COLUMNAS = 16
+        grid = [[None for _ in range(COLUMNAS)] for _ in range(FILAS)]
+
+        # Llenar grid con las notas obtenidas
+        for fila, columna in notas:
+            grid[fila][columna] = {'fila': fila, 'bounce':0}
+
+        print("Canción cargada exitosamente.")
+
+    except sqlite3.Error as e:
+        print(f"Error al cargar la canción: {e}")
+
+    finally:
+        if conexion:
+            conexion.close()
+    
+    return grid
