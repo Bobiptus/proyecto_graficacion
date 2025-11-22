@@ -19,7 +19,7 @@ pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=512)
 pygame.mixer.set_num_channels(16) 
 pygame.font.init()
 fuente_botones = pygame.font.Font(None, 32)
-screen = pygame.display.set_mode((1000, 800))
+screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 pygame.display.set_caption("Secuenciador Musical")
 clock = pygame.time.Clock()
 
@@ -28,31 +28,31 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 
-COLORES_NOTAS = [
-    (255, 100, 100),
-    (255, 150, 100),
-    (255, 200, 100),
-    (200, 255, 100),
-    (100, 255, 100),
-    (100, 200, 255),
-    (150, 100, 255)
+SPRITE_NOTAS = [
+    pygame.transform.scale(pygame.image.load("imagenes/beep.png"), (30, 30)),
+    pygame.transform.scale(pygame.image.load("imagenes/mouse.png"), (30, 30)),
+    pygame.transform.scale(pygame.image.load("imagenes/yellow.png"), (30, 30)),
+    pygame.transform.scale(pygame.image.load("imagenes/drop.png"), (30, 30)),
+    pygame.transform.scale(pygame.image.load("imagenes/organ.png"), (30, 30)),
+    pygame.transform.scale(pygame.image.load("imagenes/ghost.png"), (30, 30)),
+    pygame.transform.scale(pygame.image.load("imagenes/drum.png"), (30, 30))
 ]
 
 # Se declaran los sonidos utilizados
 sonidos = [
-    cargar_sonido("sounds/beep.wav", 1),
-    cargar_sonido("sounds/gota.wav", 1),
-    cargar_sonido("sounds/mouse.wav", 1),
-    cargar_sonido("sounds/organ.wav", 1),
-    cargar_sonido("sounds/plato.wav", 1),
-    cargar_sonido("sounds/organo.wav", 1),
-    cargar_sonido("sounds/drum.wav", 1)
+    cargar_sonido("sounds/00.wav", 1),
+    cargar_sonido("sounds/01.wav", 1),
+    cargar_sonido("sounds/02.wav", 1),
+    cargar_sonido("sounds/03.wav", 1),
+    cargar_sonido("sounds/04.wav", 1),
+    cargar_sonido("sounds/05.wav", 1),
+    cargar_sonido("sounds/06.wav", 1)
 ]
 sprite_prota = cargar_sprite_prota("imagenes/MAESTRO.png")
 
 # CONFIGURACIÓN DEL GRID
 GRID_FILAS = 7
-GRID_COLUMNAS = 16
+GRID_COLUMNAS = 32
 CELDA_ANCHO = 50
 CELDA_ALTO = 60
 GRID_INICIO_X = 100
@@ -147,6 +147,8 @@ while running:
                 if reproduciendo:
                     columna_actual = 0
                     tiempo_acumulado = 0
+                elif event.key == pygame.K_ESCAPE:
+                    running = False
     
     # LÓGICA DE REPRODUCCIÓN
     if reproduciendo:
@@ -165,7 +167,7 @@ while running:
     
     # DIBUJAR
     screen.fill(WHITE)
-    dibujar_grid(screen, config_grid, COLORES_NOTAS)
+    dibujar_grid(screen, config_grid, SPRITE_NOTAS)
     
     # DIBUJAR PLAYHEAD
     if reproduciendo or columna_actual > 0:

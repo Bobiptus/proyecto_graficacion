@@ -11,7 +11,7 @@ def inicializar_grid(filas, columnas):
         grid.append(fila)
     return grid
 
-def dibujar_grid(screen, config, colores_notas):
+def dibujar_grid(screen, config, SPRITE_NOTAS):
     inicio_x = config['inicio_x']
     inicio_y = config['inicio_y']
     ancho_celda = config['ancho_celda']
@@ -49,7 +49,11 @@ def dibujar_grid(screen, config, colores_notas):
                     bounce_offset = math.sin(elapsed * 20) * math.exp(-elapsed * 8) * 8
                     centro_y -= bounce_offset
 
-                pygame.draw.circle(screen, colores_notas[fila], (int(centro_x), int(centro_y)), 15)
+                sprite = SPRITE_NOTAS[fila]
+                ancho = sprite.get_width()
+                alto = sprite.get_height()
+                screen.blit(sprite, (int(centro_x - ancho // 2), int(centro_y - alto // 2)))
+
 
 def mouse_a_grid(mouse_x, mouse_y, config):
     inicio_x = config['inicio_x']
