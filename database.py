@@ -1,7 +1,4 @@
 import sqlite3
-import pygame
-import time
-from datetime import datetime
 
 def crear_tablas():
     """Crea las tablas necesarias en la base de datos SQLite."""
@@ -41,18 +38,33 @@ def crear_tablas():
             conexion.close()
 
 def guardar_cancion(grid):
-    """Guarda la canción actual en la base de datos."""
+    """
+    Guarda la canción actual en la base de datos, ELIMINANDO la canción 
+    anterior y re-insertando la nueva como ID=1 para mantener la referencia 
+    de carga del botón 'Cargar DB (ID 1)'.
+    """
     conexion = None
+    CANCION_ID_GUARDADA = 1 
+
     try:
         conexion = sqlite3.connect('mi_base_de_datos.db')
         cursor = conexion.cursor()
 
-        # Insertar nueva canción
-        timestamp = int(time.time())  # ej: 1701234567
-        cursor.execute("INSERT INTO canciones (nombre) VALUES (?)", (f"Canción {timestamp}",))
-        cancion_id = cursor.lastrowid
+        print(f"Eliminando notas y canción anterior con ID={CANCION_ID_GUARDADA}...")
+        cursor.execute("DELETE FROM notas WHERE cancion_id = ?", (CANCION_ID_GUARDADA,))
+        cursor.execute("DELETE FROM canciones WHERE id = ?", (CANCION_ID_GUARDADA,))
+        
+        cursor.execute("PRAGMA foreign_keys = OFF") 
+        
+        timestamp = int(1)
+        nombre_cancion = f"Canción Guardada ({timestamp})"
+        
+        cursor.execute("INSERT INTO canciones (id, nombre) VALUES (?, ?)", (CANCION_ID_GUARDADA, nombre_cancion))
+        
+        cursor.execute("PRAGMA foreign_keys = ON")
+        
+        cancion_id = CANCION_ID_GUARDADA
 
-        # Insertar notas
         for fila in range(len(grid)):
             for columna in range(len(grid[fila])):
                 if grid[fila][columna] is not None:
@@ -62,7 +74,7 @@ def guardar_cancion(grid):
                     )
 
         conexion.commit()
-        print("Canción guardada exitosamente.")
+        print(f"Canción ID={CANCION_ID_GUARDADA} sobreescrita exitosamente.")
 
     except sqlite3.Error as e:
         print(f"Error al guardar la canción: {e}")
@@ -70,6 +82,8 @@ def guardar_cancion(grid):
     finally:
         if conexion:
             conexion.close()
+            
+# ... (el resto del código de database.py)
 
 def cargar_cancion(cancion_id):
     """Carga una canción desde la base de datos."""
@@ -85,7 +99,7 @@ def cargar_cancion(cancion_id):
 
         # Inicializar grid vacío
         FILAS = 7
-        COLUMNAS = 16
+        COLUMNAS = 32
         grid = [[None for _ in range(COLUMNAS)] for _ in range(FILAS)]
 
         # Llenar grid con las notas obtenidas
